@@ -10,14 +10,14 @@
 # Import Module
 ~~~
     maven { url 'https://jitpack.io' }
-    implementation 'com.github.trongluan99:ITGModuleAds:1.0.8'
+    implementation 'NodoorModuleAds:1.0.8'
     implementation 'com.google.android.play:core:1.10.3'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     implementation 'com.google.android.gms:play-services-ads:21.3.0'
     implementation 'androidx.multidex:multidex:2.0.1'
 ~~~  
 # Summary
-* [Setup ITGAd](#setup_ITGad)
+* [Setup NodoorAd](#setup_Nodoorad)
     * [Setup id ads](#set_up_ads)
     * [Config ads](#config_ads)
     * [Ads Formats](#ads_formats)
@@ -25,7 +25,7 @@
 * [Billing App](#billing_app)
 * [Ads rule](#ads_rule)
 
-# <a id="setup_ITGad"></a>Setup ITGAd
+# <a id="setup_Nodoorad"></a>Setup NodoorAd
 ## <a id="set_up_ads"></a>Setup enviroment with id ads for project
 
 We recommend you to setup 2 environments for your project, and only use test id during development, ids from your admob only use when needed and for publishing to Google Store
@@ -92,30 +92,30 @@ class App extends AdsMultiDexApplication(){
     public void onCreate() {
         super.onCreate();
     ...
-        String environment = BuildConfig.build_debug ? ITGAdConfig.ENVIRONMENT_DEVELOP : ITGAdConfig.ENVIRONMENT_PRODUCTION;
-        itgAdConfig = new ITGAdConfig(this, ITGAdConfig.PROVIDER_ADMOB, environment);
+        String environment = BuildConfig.build_debug ? NodoorAdConfig.ENVIRONMENT_DEVELOP : NodoorAdConfig.ENVIRONMENT_PRODUCTION;
+        NodoorAdConfig = new NodoorAdConfig(this, NodoorAdConfig.PROVIDER_ADMOB, environment);
 
         // Optional: setup Adjust event
         AdjustConfig adjustConfig = new AdjustConfig(true,ADJUST_TOKEN);
         // adjustConfig.setEventAdImpression(EVENT_AD_IMPRESSION_ADJUST);
         // adjustConfig.setEventNamePurchase(EVENT_PURCHASE_ADJUST);
-        itgAdConfig.setAdjustConfig(adjustConfig);
+        NodoorAdConfig.setAdjustConfig(adjustConfig);
 
         // Optional: setup Appsflyer event
         AppsflyerConfig appsflyerConfig = new AppsflyerConfig(true,APPSFLYER_TOKEN);
-        itgAdConfig.setAppsflyerConfig(appsflyerConfig);
+        NodoorAdConfig.setAppsflyerConfig(appsflyerConfig);
     
         // Optional: setup client token SDK Facebook
-        itgAdConfig.setFacebookClientToken(FACEBOOK_CLIENT_TOKEN)
+        NodoorAdConfig.setFacebookClientToken(FACEBOOK_CLIENT_TOKEN)
 
         // Optional: enable ads resume
-        itgAdConfig.setIdAdResume(BuildConfig.ads_open_app);
+        NodoorAdConfig.setIdAdResume(BuildConfig.ads_open_app);
 
         // Optional: setup list device test - recommended to use
         listTestDevice.add(DEVICE_ID_TEST);
-        itgAdConfig.setListDeviceTest(listTestDevice);
+        NodoorAdConfig.setListDeviceTest(listTestDevice);
 
-        ITGAd.getInstance().init(this, itgAdConfig, false);
+        NodoorAd.getInstance().init(this, NodoorAdConfig, false);
 
         // Auto disable ad resume after user click ads and back to app
         Admob.getInstance().setDisableAdResumeWhenClickAds(true);
@@ -137,7 +137,7 @@ android:name=".App"
 SplashActivity
 ### Ad Splash Interstitial
 ~~~ 
-    ITGAdCallback adCallback = new ITGAdCallback() {
+    NodoorAdCallback adCallback = new NodoorAdCallback() {
         @Override
         public void onNextAction() {
             super.onNextAction();
@@ -147,10 +147,10 @@ SplashActivity
     };
 ~~~
 ~~~
-        ITGAd.getInstance().setInitCallback(new ITGInitCallback() {
+        NodoorAd.getInstance().setInitCallback(new NodoorInitCallback() {
             @Override
             public void initAdSuccess() {
-                ITGAd.getInstance().loadSplashInterstitialAds(SplashActivity.this, idAdSplash, TIME_OUT, TIME_DELAY_SHOW_AD, true, adCallback);
+                NodoorAd.getInstance().loadSplashInterstitialAds(SplashActivity.this, idAdSplash, TIME_OUT, TIME_DELAY_SHOW_AD, true, adCallback);
             }
         });
 ~~~
@@ -174,13 +174,13 @@ Load ad interstital before show
 Check null when Load Inter
 ~~~
   private fun loadInterCreate() {
-    ApInterstitialAd mInterstitialAd = ITGAd.getInstance().getInterstitialAds(this, idInter);
+    ApInterstitialAd mInterstitialAd = NodoorAd.getInstance().getInterstitialAds(this, idInter);
   }
 ~~~
 Show and auto release ad interstitial
 ~~~
          if (mInterstitialAd.isReady()) {
-                ITGAd.getInstance().forceShowInterstitial(this, mInterstitialAd, new ITGAdCallback() {
+                NodoorAd.getInstance().forceShowInterstitial(this, mInterstitialAd, new NodoorAdCallback() {
             @Override
             public void onNextAction() {
                 super.onNextAction();
@@ -220,13 +220,13 @@ call load ad banner
 ~~~
 call load ad banner
 ~~~
-  ITGAd.getInstance().loadBanner(this, idBanner);
+  NodoorAd.getInstance().loadBanner(this, idBanner);
 ~~~
 
 ### Ad Native
 Load ad native before show
 ~~~
-        ITGAd.getInstance().loadNativeAdResultCallback(this,ID_NATIVE_AD, com.ads.control.R.layout.custom_native_max_small,new ITGAdCallback(){
+        NodoorAd.getInstance().loadNativeAdResultCallback(this,ID_NATIVE_AD, com.ads.control.R.layout.custom_native_max_small,new NodoorAdCallback(){
             @Override
             public void onNativeAdLoaded(@NonNull ApNativeAd nativeAd) {
                 super.onNativeAdLoaded(nativeAd);
@@ -236,14 +236,14 @@ Load ad native before show
 ~~~
 Populate native ad to view
 ~~~
-    ITGAd.getInstance().populateNativeAdView(MainApplovinActivity.this,nativeAd,flParentNative,shimmerFrameLayout);
+    NodoorAd.getInstance().populateNativeAdView(MainApplovinActivity.this,nativeAd,flParentNative,shimmerFrameLayout);
 ~~~
 auto load and show native contains loading
 
 in layout XML
 ~~~
-      <com.ads.control.ads.nativeAds.ITGNativeAdView
-        android:id="@+id/ITGNativeAds"
+      <com.ads.control.ads.nativeAds.NodoorNativeAdView
+        android:id="@+id/NodoorNativeAds"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_150sdp"
         android:background="@drawable/bg_card_ads"
@@ -254,16 +254,16 @@ in layout XML
 ~~~
 Call load native ad
 ~~~
- ITGNativeAdView.loadNativeAd(this, idNative);
+ NodoorNativeAdView.loadNativeAd(this, idNative);
 ~~~
 Load Ad native for recyclerView
 ~~~~
     // ad native repeating interval
-    ITGAdAdapter     adAdapter = ITGAd.getInstance().getNativeRepeatAdapter(this, idNative, layoutCustomNative, com.ads.control.R.layout.layout_native_medium,
+    NodoorAdAdapter     adAdapter = NodoorAd.getInstance().getNativeRepeatAdapter(this, idNative, layoutCustomNative, com.ads.control.R.layout.layout_native_medium,
                 originalAdapter, listener, 4);
     
     // ad native fixed in position
-        ITGAdAdapter   adAdapter = ITGAd.getInstance().getNativeFixedPositionAdapter(this, idNative, layoutCustomNative, com.ads.control.R.layout.layout_native_medium,
+        NodoorAdAdapter   adAdapter = NodoorAd.getInstance().getNativeFixedPositionAdapter(this, idNative, layoutCustomNative, com.ads.control.R.layout.layout_native_medium,
                 originalAdapter, listener, 4);
     
         recyclerView.setAdapter(adAdapter.getAdapter());
@@ -272,10 +272,10 @@ Load Ad native for recyclerView
 ### Ad Reward
 Get and show reward
 ~~~
-  ApRewardAd rewardAd = ITGAd.getInstance().getRewardAd(this, idAdReward);
+  ApRewardAd rewardAd = NodoorAd.getInstance().getRewardAd(this, idAdReward);
 
    if (rewardAd != null && rewardAd.isReady()) {
-                ITGAd.getInstance().forceShowRewardAd(this, rewardAd, new ITGAdCallback());
+                NodoorAd.getInstance().forceShowRewardAd(this, rewardAd, new NodoorAdCallback());
             }
 });
 ~~~
@@ -285,7 +285,7 @@ App
   override fun onCreate() {
     super.onCreate()
     AppOpenManager.getInstance().enableAppResume()
-    ITGAdConfig.setIdAdResume(AppOpenManager.AD_UNIT_ID_TEST);
+    NodoorAdConfig.setIdAdResume(AppOpenManager.AD_UNIT_ID_TEST);
     ...
   }
     
