@@ -3,6 +3,8 @@
     <dimen name="banner_height">90dp</dimen>
 
     <attr name="SpinKitViewStyle" format="reference" />
+    <attr name="ratingBarStyle" format="reference"/>
+
     <declare-styleable name="SpinKitView">
         <attr name="SpinKit_Style">
             <enum name="RotatingPlane" value="0" />

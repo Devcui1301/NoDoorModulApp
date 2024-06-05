@@ -1,5 +1,6 @@
 package com.ads.control.admob;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -8,6 +9,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Lifecycle;
@@ -64,11 +67,11 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.VideoOptions;
-import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.initialization.AdapterStatus;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdOptions;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
@@ -107,7 +110,6 @@ public class Admob {
     boolean isTimeDelay = false; //xử lý delay time show ads, = true mới show ads
     private boolean openActivityAfterShowInterAds = false;
     private Context context;
-//    private AppOpenAd appOpenAd = null;
 
     public static final String BANNER_INLINE_SMALL_STYLE = "BANNER_INLINE_SMALL_STYLE";
     public static final String BANNER_INLINE_LARGE_STYLE = "BANNER_INLINE_LARGE_STYLE";
@@ -123,18 +125,6 @@ public class Admob {
     public Thread threadHighFloor;
     public Thread threadAll;
 
-    public void setFan(boolean fan) {
-        isFan = fan;
-    }
-
-    public void setColony(boolean adcolony) {
-        isAdcolony = adcolony;
-    }
-
-    public void setAppLovin(boolean appLovin) {
-        isAppLovin = appLovin;
-
-    }
 
     /**
      * Giới hạn số lần click trên 1 admod tren 1 ngay
@@ -154,9 +144,7 @@ public class Admob {
         return instance;
     }
 
-    private Admob() {
-
-    }
+    private Admob() {}
 
     public void setNumToShowAds(int numShowAds) {
         this.numShowAds = numShowAds;
@@ -175,6 +163,7 @@ public class Admob {
     public void setDisableAdResumeWhenClickAds(boolean disableAdResumeWhenClickAds) {
         this.disableAdResumeWhenClickAds = disableAdResumeWhenClickAds;
     }
+
 
     /**
      * khởi tạo admod
@@ -222,7 +211,6 @@ public class Admob {
         this.context = context;
     }
 
-
     public boolean isShowLoadingSplash() {
         return isShowLoadingSplash;
     }
@@ -250,15 +238,6 @@ public class Admob {
 
     public AdRequest getAdRequest() {
         AdRequest.Builder builder = new AdRequest.Builder();
-        // no need from facebook sdk ver 6.12.0.0
-        /*if (isFan) {
-            Bundle extras = new FacebookExtras()
-                    .setNativeBanner(true)
-                    .build();
-
-            builder.addNetworkExtrasBundle(FacebookAdapter.class, extras);
-        }*/
-
         if (isAdcolony) {
             AdColonyBundleBuilder.setShowPrePopup(true);
             AdColonyBundleBuilder.setShowPostPopup(true);
@@ -271,22 +250,11 @@ public class Admob {
                     .build();
             builder.addNetworkExtrasBundle(ApplovinAdapter.class, extras);
         }
-//        builder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
         return builder.build();
-    }
-
-    private void requestInterstitialAds(InterstitialAd mInterstitialAd, String id, InterstitialAdLoadCallback callback) {
-        if (mInterstitialAd == null) {
-
-        }
     }
 
     public boolean interstitialSplashLoaded() {
         return mInterstitialSplash != null;
-    }
-
-    public InterstitialAd getmInterstitialSplash() {
-        return mInterstitialSplash;
     }
 
     /**
@@ -652,7 +620,6 @@ public class Admob {
         threadAll.start();
     }
 
-
     /**
      * Load quảng cáo Full tại màn SplashActivity
      * Sau khoảng thời gian timeout thì load ads và callback về cho View
@@ -666,7 +633,6 @@ public class Admob {
     public void loadSplashInterstitialAds(final Context context, String id, long timeOut, long timeDelay, AdCallback adListener) {
         isTimeDelay = false;
         isTimeout = false;
-        Log.i(TAG, "loadSplashInterstitalAds  start time loading:" + Calendar.getInstance().getTimeInMillis() + "    ShowLoadingSplash:" + isShowLoadingSplash);
 
         if (AppPurchase.getInstance().isPurchased(context)) {
             if (adListener != null) {
@@ -679,11 +645,9 @@ public class Admob {
             public void run() {
                 //check delay show ad splash
                 if (mInterstitialSplash != null) {
-                    Log.i(TAG, "loadSplashInterstitalAds:show ad on delay ");
                     onShowSplash((AppCompatActivity) context, adListener);
                     return;
                 }
-                Log.i(TAG, "loadSplashInterstitalAds: delay validate");
                 isTimeDelay = true;
             }
         }, timeDelay);
@@ -772,8 +736,6 @@ public class Admob {
     public void loadSplashInterstitialAds(final Context context, String id, long timeOut, long timeDelay, boolean showSplashIfReady, AdCallback adListener) {
         isTimeDelay = false;
         isTimeout = false;
-        Log.i(TAG, "loadSplashInterstitialAds  start time loading:" + Calendar.getInstance().getTimeInMillis() + "    ShowLoadingSplash:" + isShowLoadingSplash);
-
         if (AppPurchase.getInstance().isPurchased(context)) {
             if (adListener != null) {
                 adListener.onNextAction();
@@ -785,14 +747,12 @@ public class Admob {
             public void run() {
                 //check delay show ad splash
                 if (mInterstitialSplash != null) {
-                    Log.i(TAG, "loadSplashInterstitalAds:show ad on delay ");
                     if (showSplashIfReady)
                         onShowSplash((AppCompatActivity) context, adListener);
                     else
                         adListener.onAdSplashReady();
                     return;
                 }
-                Log.i(TAG, "loadSplashInterstitalAds: delay validate");
                 isTimeDelay = true;
             }
         }, timeDelay);
@@ -802,10 +762,8 @@ public class Admob {
             rdTimeout = new Runnable() {
                 @Override
                 public void run() {
-                    Log.e(TAG, "loadSplashInterstitalAds: on timeout");
                     isTimeout = true;
                     if (mInterstitialSplash != null) {
-                        Log.i(TAG, "loadSplashInterstitalAds:show ad on timeout ");
                         if (showSplashIfReady)
                             onShowSplash((AppCompatActivity) context, adListener);
                         else
@@ -820,15 +778,11 @@ public class Admob {
             };
             handlerTimeout.postDelayed(rdTimeout, timeOut);
         }
-
-//        if (isShowLoadingSplash)
-//            return;
         isShowLoadingSplash = true;
         getInterstitialAds(context, id, new AdCallback() {
             @Override
             public void onInterstitialLoad(InterstitialAd interstitialAd) {
                 super.onInterstitialLoad(interstitialAd);
-                Log.e(TAG, "loadSplashInterstitalAds  end time loading success:" + Calendar.getInstance().getTimeInMillis() + "     time limit:" + isTimeout);
                 if (isTimeout)
                     return;
                 if (interstitialAd != null) {
@@ -838,7 +792,6 @@ public class Admob {
                             onShowSplash((AppCompatActivity) context, adListener);
                         else
                             adListener.onAdSplashReady();
-                        Log.i(TAG, "loadSplashInterstitalAds:show ad on loaded ");
                     }
                 }
             }
@@ -855,7 +808,6 @@ public class Admob {
             @Override
             public void onAdFailedToLoad(LoadAdError i) {
                 super.onAdFailedToLoad(i);
-                Log.e(TAG, "loadSplashInterstitalAds  end time loading error:" + Calendar.getInstance().getTimeInMillis() + "     time limit:" + isTimeout);
                 if (isTimeout)
                     return;
                 if (adListener != null) {
@@ -875,8 +827,6 @@ public class Admob {
     public void loadSplashInterstitialAds(final Context context, String id, long timeOut, long timeDelay, boolean isShow, boolean showSplashIfReady, AdCallback adListener) {
         isTimeDelay = false;
         isTimeout = false;
-        Log.i(TAG, "loadSplashInterstitialAds  start time loading:" + Calendar.getInstance().getTimeInMillis() + "    ShowLoadingSplash:" + isShowLoadingSplash);
-
         if (AppPurchase.getInstance().isPurchased(context)) {
             if (adListener != null) {
                 adListener.onNextAction();
@@ -888,14 +838,12 @@ public class Admob {
             public void run() {
                 //check delay show ad splash
                 if (mInterstitialSplash != null) {
-                    Log.i(TAG, "loadSplashInterstitialAds:show ad on delay ");
                     if (showSplashIfReady && isShow)
                         onShowSplash((AppCompatActivity) context, adListener);
                     else
                         adListener.onAdSplashReady();
                     return;
                 }
-                Log.i(TAG, "loadSplashInterstitialAds: delay validate");
                 isTimeDelay = true;
             }
         }, timeDelay);
@@ -905,10 +853,8 @@ public class Admob {
             rdTimeout = new Runnable() {
                 @Override
                 public void run() {
-                    Log.e(TAG, "loadSplashInterstitialAds: on timeout");
                     isTimeout = true;
                     if (mInterstitialSplash != null) {
-                        Log.i(TAG, "loadSplashInterstitialAds:show ad on timeout ");
                         if (showSplashIfReady && isShow)
                             onShowSplash((AppCompatActivity) context, adListener);
                         else
@@ -923,15 +869,11 @@ public class Admob {
             };
             handlerTimeout.postDelayed(rdTimeout, timeOut);
         }
-
-//        if (isShowLoadingSplash)
-//            return;
         isShowLoadingSplash = true;
         getInterstitialAds(context, id, new AdCallback() {
             @Override
             public void onInterstitialLoad(InterstitialAd interstitialAd) {
                 super.onInterstitialLoad(interstitialAd);
-                Log.e(TAG, "loadSplashInterstitialAds  end time loading success:" + Calendar.getInstance().getTimeInMillis() + "     time limit:" + isTimeout);
                 if (isTimeout)
                     return;
                 if (interstitialAd != null) {
@@ -941,7 +883,6 @@ public class Admob {
                             onShowSplash((AppCompatActivity) context, adListener);
                         else
                             adListener.onAdSplashReady();
-                        Log.i(TAG, "loadSplashInterstitialAds:show ad on loaded ");
                     }
                 }
             }
@@ -958,7 +899,6 @@ public class Admob {
             @Override
             public void onAdFailedToLoad(LoadAdError i) {
                 super.onAdFailedToLoad(i);
-                Log.e(TAG, "loadSplashInterstitalAds  end time loading error:" + Calendar.getInstance().getTimeInMillis() + "     time limit:" + isTimeout);
                 if (isTimeout)
                     return;
                 if (adListener != null) {
@@ -977,16 +917,12 @@ public class Admob {
 
     public void onShowSplashHighFloorOrAll(AppCompatActivity activity, AdCallback adListener) {
         isShowLoadingSplash = true;
-        Log.d(TAG, "onShowSplash: ");
-
         if (mInterstitialSplash == null) {
             adListener.onNextAction();
             return;
         }
 
         mInterstitialSplash.setOnPaidEventListener(adValue -> {
-            Log.d(TAG, "OnPaidEvent splash:" + adValue.getValueMicros());
-
             NoDoorLogEventManager.logPaidAdImpression(context,
                     adValue,
                     mInterstitialSplash.getAdUnitId(),
@@ -1005,14 +941,12 @@ public class Admob {
         mInterstitialSplash.setFullScreenContentCallback(new FullScreenContentCallback() {
             @Override
             public void onAdShowedFullScreenContent() {
-                Log.d(TAG, " Splash:onAdShowedFullScreenContent ");
                 AppOpenManager.getInstance().setInterstitialShowing(true);
                 isShowLoadingSplash = false;
             }
 
             @Override
             public void onAdDismissedFullScreenContent() {
-                Log.d(TAG, " Splash:onAdDismissedFullScreenContent ");
                 AppOpenManager.getInstance().setInterstitialShowing(false);
                 mInterstitialSplash = null;
                 if (adListener != null) {
@@ -1030,7 +964,6 @@ public class Admob {
 
             @Override
             public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-                Log.e(TAG, "Splash onAdFailedToShowFullScreenContent: " + adError.getMessage());
                 mInterstitialSplash = null;
                 isShowLoadingSplash = false;
                 if (adListener != null) {
@@ -1102,21 +1035,17 @@ public class Admob {
                     if (dialog != null && dialog.isShowing() && !activity.isDestroyed())
                         dialog.dismiss();
                     isShowLoadingSplash = false;
-                    Log.e(TAG, "onShowSplash:   show fail in background after show loading ad");
                     adListener.onAdFailedToShow(new AdError(0, " show fail in background after show loading ad", "AperoAd"));
                 }
             }, 800);
 
         } else {
             isShowLoadingSplash = false;
-            Log.e(TAG, "onShowSplash: fail on background");
         }
     }
 
     public void onShowSplash(AppCompatActivity activity, AdCallback adListener) {
         isShowLoadingSplash = true;
-        Log.d(TAG, "onShowSplash: ");
-
         if (mInterstitialSplash == null) {
             adListener.onNextAction();
             return;
@@ -1437,8 +1366,6 @@ public class Admob {
 
                 if (interstitialAd != null) {
                     interstitialAd.setOnPaidEventListener(adValue -> {
-
-                        Log.d(TAG, "OnPaidEvent loadInterstitialAds:" + adValue.getValueMicros());
                         NoDoorLogEventManager.logPaidAdImpression(context,
                                 adValue,
                                 interstitialAd.getAdUnitId(),
@@ -1478,7 +1405,6 @@ public class Admob {
         }
     }
 
-
     /**
      * Trả về 1 InterstitialAd và request Ads
      *
@@ -1513,7 +1439,6 @@ public class Admob {
                                     interstitialAd.getResponseInfo()
                                             .getMediationAdapterClassName(), AdType.INTERSTITIAL);
                         });
-                        Log.i(TAG, "InterstitialAds onAdLoaded");
                     }
 
                     @Override
@@ -1551,8 +1476,6 @@ public class Admob {
             forceShowInterstitial(context, mInterstitialAd, callback);
         }
     }
-
-
     /**
      * Hiển thị ads theo số lần được xác định trước và callback result
      * vd: click vào 3 lần thì show ads full.
@@ -1641,7 +1564,6 @@ public class Admob {
             callback.onNextAction();
         }
     }
-
 
     /**
      * Bắt buộc hiển thị  ads full và callback result
@@ -2115,13 +2037,10 @@ public class Admob {
 
                 @Override
                 public void onAdLoaded() {
-                    Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
                     containerShimmer.stopShimmer();
                     containerShimmer.setVisibility(View.GONE);
                     adContainer.setVisibility(View.VISIBLE);
                     adView.setOnPaidEventListener(adValue -> {
-                        Log.d(TAG, "OnPaidEvent banner:" + adValue.getValueMicros());
-
                         NoDoorLogEventManager.logPaidAdImpression(context,
                                 adValue,
                                 adView.getAdUnitId(),
@@ -2583,18 +2502,7 @@ public class Admob {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//
-//        try {
-//            if (nativeAd.getStore() == null) {
-//                Objects.requireNonNull(adView.getStoreView()).setVisibility(View.INVISIBLE);
-//            } else {
-//                Objects.requireNonNull(adView.getStoreView()).setVisibility(View.VISIBLE);
-//                ((TextView) adView.getStoreView()).setText(nativeAd.getStore());
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
+
         try {
             if (nativeAd.getStarRating() == null) {
                 Objects.requireNonNull(adView.getStarRatingView()).setVisibility(View.INVISIBLE);
@@ -3030,13 +2938,14 @@ public class Admob {
                     NotificationManager.IMPORTANCE_LOW);
             notificationManager.createNotificationChannel(channel);
         }
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         notificationManager.notify(typeAds, notification);
 
         Log.e(TAG, "Found test ad id on debug : " + AppUtil.VARIANT_DEV);
-
         if (!AppUtil.VARIANT_DEV) {
             Log.e(TAG, "Found test ad id on environment production. use test id only for develop environment ");
-            throw new RuntimeException("Found test ad id on environment production. Id found: " + id);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.ads.control.admob;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
@@ -7,6 +8,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -15,6 +17,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Lifecycle;
@@ -102,11 +105,11 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     private int statusOpen = -1;
     private int statusInter = -1;
 
-    private int Type_Loading = 0;
-    private int Type_Load_Success = 1;
-    private int Type_Load_Fail = 2;
-    private int Type_Show_Success = 3;
-    private int Type_Show_Fail = 4;
+    private final int Type_Loading = 0;
+    private final int Type_Load_Success = 1;
+    private final int Type_Load_Fail = 2;
+    private final int Type_Show_Success = 3;
+    private final int Type_Show_Fail = 4;
 
     private boolean isAppOpenShowed = false;
     private AppOpenAd adLoadedAppOpen = null;
@@ -351,10 +354,10 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                     NotificationManager.IMPORTANCE_LOW);
             notificationManager.createNotificationChannel(channel);
         }
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         notificationManager.notify(isSplash ? Admob.SPLASH_ADS : Admob.RESUME_ADS, notification);
-//        if (!BuildConfig.DEBUG){
-//            throw new RuntimeException("Found test ad id on release");
-//        }
     }
 
     /**
@@ -1185,11 +1188,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             }
             return;
         }
-
-//        if (isAdAvailable(true)) {
-//            showAdIfAvailable(true);
-//            return;
-//        }
 
         loadCallback =
                 new AppOpenAd.AppOpenAdLoadCallback() {

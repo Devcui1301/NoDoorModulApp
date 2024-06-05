@@ -8,10 +8,10 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/_16sdp"
+        android:layout_height="@dimen/_40sdp"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        app:lottie_rawRes="@raw/resume_loading" />
+        app:lottie_rawRes="@raw/icon_loading" />
 
     <TextView
         android:layout_width="wrap_content"
