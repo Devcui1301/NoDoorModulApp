@@ -11,6 +11,7 @@
     </declare-styleable>
 
     <attr name="SpinKitViewStyle" format="reference" />
+    <attr name="ratingBarStyle" />
     <declare-styleable name="SpinKitView">
         <attr name="SpinKit_Style">
             <enum name="RotatingPlane" value="0" />
