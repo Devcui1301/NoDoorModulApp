@@ -1,9 +1,7 @@
 apply plugin: 'com.android.library'
-//apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android'
 apply plugin: 'maven-publish'
 
-group = 'com.github.AperoVN'
-version = '5.6.0-alpha04'
 
 android {
     compileSdkVersion 33
@@ -98,8 +96,8 @@ afterEvaluate {
 //             Creates a Maven publication called "release".
             release(MavenPublication) {
                 from components.findByName('release')
-                groupId = 'com.github.Phonghh9920'
-                artifactId = 'NoDoorLibAds'
+                groupId = 'com.github.Devcui1301'
+                artifactId = 'NoDoorModulApp'
                 version = '1.0.1'
             }
         }
