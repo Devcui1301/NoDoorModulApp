@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-//apply plugin: 'kotlin-android'
 apply plugin: 'maven-publish'
 
 group = 'com.github.AperoVN'
@@ -12,7 +11,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 9
-        versionName "1.1.3"
+        versionName "1.0.3"
     }
 
 
@@ -92,16 +91,15 @@ dependencies {
     implementation 'com.appsflyer:adrevenue:6.4.3'
 }
 
-//afterEvaluate {
-//    publishing {
-//        publications {
-            // Creates a Maven publication called "release".
-//            release(MavenPublication) {
-//                from components.release
-//                groupId = 'com.github.AperoVN'
-//                artifactId = 'AperoModuleAds'
-//                version = '5.5.4-alpha5'
-//            }
-//        }
-//    }
-//}
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.findByName('release')
+                groupId = 'com.github.Phonghh9920'
+                artifactId = 'NoDoorLibAds'
+                version = '1.0.3'
+            }
+        }
+    }
+}
