@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 5
-        versionName "1.0.5"
+        versionCode 8
+        versionName "1.0.8"
     }
 
 
@@ -95,10 +95,10 @@ afterEvaluate {
         publications {
 //             Creates a Maven publication called "release".
             release(MavenPublication) {
-                from components.findByName('release')
+                from components.release
                 groupId = 'com.github.Devcui1301'
                 artifactId = 'NoDoorModulApp'
-                version = '1.0.7'
+                version = '1.0.8'
             }
         }
     }
