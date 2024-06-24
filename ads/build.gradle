@@ -97,7 +97,7 @@ publishing {
             from components.findByName('release')
             groupId = 'com.github.Devcui1301'
             artifactId = 'NoDoorModulApp'
-            version = '1.0.1'
+            version = '1.0.9'
 
         }
     }
