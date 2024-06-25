@@ -96,7 +96,7 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
                 groupId = 'com.github.Devcui1301'
-                artifactId = 'TD-NoDoorModulApp'
+                artifactId = 'NoDoorModulApp'
                 version = '1.0.9'
             }
         }
