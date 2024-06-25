@@ -90,19 +90,18 @@ dependencies {
     implementation 'com.appsflyer:adrevenue:6.4.3'
 }
 
-
-publishing {
-    publications {
-        release(MavenPublication) {
-            from components.findByName('release')
-            groupId = 'com.github.Devcui1301'
-            artifactId = 'NoDoorModulApp'
-            version = '1.0.9'
-
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.Devcui1301'
+                artifactId = 'TD-NoDoorModulApp'
+                version = '1.0.9'
+            }
         }
     }
 }
-
 
 
 
