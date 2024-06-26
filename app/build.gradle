@@ -14,7 +14,7 @@ android {
         versionCode 8
         versionName "1.0.8"
         def formattedDate = new Date().format('MMM.dd.yyyy')
-        archivesBaseName = "ITGModuleAds_v${versionName}(${versionCode})_${formattedDate}"
+        archivesBaseName = "release${versionName}(${versionCode})_${formattedDate}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
