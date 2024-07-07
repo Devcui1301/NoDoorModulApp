@@ -25,8 +25,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     namespace 'com.ads.control'
 }
@@ -65,9 +65,8 @@ dependencies {
 
     def multidex_version = "2.0.1"
     implementation "androidx.multidex:multidex:$multidex_version"
-    def billing_version = "5.1.0"
-    implementation "com.android.billingclient:billing:$billing_version"
-    implementation "com.google.guava:guava:27.1-android"
+    implementation "com.android.billingclient:billing:7.0.0"
+    implementation "com.google.guava:guava:31.1-android"
     //adjust
     implementation 'com.adjust.sdk:adjust-android:4.33.1'
     implementation 'com.android.installreferrer:installreferrer:2.2'
@@ -97,7 +96,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.Devcui1301'
                 artifactId = 'NoDoorModulApp'
-                version = '1.1.6'
+                version = '1.1.8'
             }
         }
     }
