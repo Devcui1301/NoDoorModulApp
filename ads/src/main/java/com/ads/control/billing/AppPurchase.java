@@ -543,7 +543,6 @@ public class AppPurchase {
             return "";
         }
         ProductDetails productDetails = skuDetailsINAPMap.get(productId);
-        Log.d(TAG, "purchase: "+ productDetails.toString());
         //ProductDetails{jsonString='{"productId":"android.test.purchased","type":"inapp","title":"Tiêu đề mẫu","description":"Mô tả mẫu về sản phẩm: android.test.purchased.","skuDetailsToken":"AEuhp4Izz50wTvd7YM9wWjPLp8hZY7jRPhBEcM9GAbTYSdUM_v2QX85e8UYklstgqaRC","oneTimePurchaseOfferDetails":{"priceAmountMicros":23207002450,"priceCurrencyCode":"VND","formattedPrice":"23.207 ₫"}}', parsedJson={"productId":"android.test.purchased","type":"inapp","title":"Tiêu đề mẫu","description":"Mô tả mẫu về sản phẩm: android.test.purchased.","skuDetailsToken":"AEuhp4Izz50wTvd7YM9wWjPLp8hZY7jRPhBEcM9GAbTYSdUM_v2QX85e8UYklstgqaRC","oneTimePurchaseOfferDetails":{"priceAmountMicros":23207002450,"priceCurrencyCode":"VND","formattedPrice":"23.207 ₫"}}, productId='android.test.purchased', productType='inapp', title='Tiêu đề mẫu', productDetailsToken='AEuhp4Izz50wTvd7YM9wWjPLp8hZY7jRPhBEcM9GAbTYSdUM_v2QX85e8UYklstgqaRC', subscriptionOfferDetails=null}
         if (AppUtil.VARIANT_DEV) {
             // Auto using id purchase test in variant dev
